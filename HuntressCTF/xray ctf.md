@@ -5,7 +5,7 @@ Status: #completed_huntress_CTF
 Tags: [[solved]] [[huntressctf]] [[ctf]] [[dnSpy]] [[Malware]] [[cyber security awareness month]] [[dll]]
 
 # xray ctf
-xray is an interesting malware challenge, the file we get was a quarantined malware file, there was a video by [[John Hammond]] that covers this really well ![[Recover Quarantined Malware Video]](https://www.youtube.com/watch?v=K60kriw4o44) 
+xray is an interesting malware challenge, the file we get was a quarantined malware file, there was a video by [[John Hammond]] that covers this really well [[Recover Quarantined Malware Video]](https://www.youtube.com/watch?v=K60kriw4o44) 
 Using a software called DeXray we can recover the file.
 ![HuntressCTF_xRay_dexray](https://github.com/user-attachments/assets/2e2b3a61-d21e-4359-8e1b-670b8b3a64ec)
 
