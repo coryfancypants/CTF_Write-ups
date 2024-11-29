@@ -5,6 +5,8 @@ Status: #completed_huntress_CTF
 Tags: [[huntressctf]] [[solved]] [[malware]] [[obfuscation]] [[ctf]] [[Cyber Security]] [[cyber security awareness month]] 
 
 # strange_calc
+Side Note from Future Cory: This was the very first challenge of the CTF, and reading this back, I learned a lot from how much I over complicated this. The other challenges had much better flow, and I felt like I had a better understanding, of what I am looking for, and where I should be looking.
+
 Strange Calc is malware challenge for the first day of the Huntress CTF. This challenge isn't overly complicated, but I made it harder than it needed to be, though for this being my first official CTF I'm not bothered by how I made it more complex. 
 We start by prepping the file onto our Malware Analysis VM
 1. Enable SSH on our kali and Malware Analysis VM
