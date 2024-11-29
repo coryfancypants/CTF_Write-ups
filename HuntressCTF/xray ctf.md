@@ -5,17 +5,20 @@ Status: #completed_huntress_CTF
 Tags: [[solved]] [[huntressctf]] [[ctf]] [[dnSpy]] [[Malware]] [[cyber security awareness month]] [[dll]]
 
 # xray ctf
-xray is an interesting malware challenge, the file we get was a quarantined malware file, there was a video by [[John Hammond]] that covers this really well [[Recover Quarantined Malware Video]] 
+xray is an interesting malware challenge, the file we get was a quarantined malware file, there was a video by [[John Hammond]] that covers this really well ![[Recover Quarantined Malware Video]](https://www.youtube.com/watch?v=K60kriw4o44) 
 Using a software called DeXray we can recover the file.
-![[HuntressCTF_xRay_dexray.png]]
+![HuntressCTF_xRay_dexray](https://github.com/user-attachments/assets/2e2b3a61-d21e-4359-8e1b-670b8b3a64ec)
+
 We can check the file type of this recovered file, and see that it is a [[DLL]]
 so I'm going to move the recovered file over to flare_vm, because lets open it in [[DnSpy]]
 
-![[HuntressCTF_xray_dnspy.png]]
+![HuntressCTF_xray_dnspy](https://github.com/user-attachments/assets/eb0dbe79-6fd3-45db-ac8f-45d105f0bc10)
+
 Loading up the [[dll]] into [[dnSpy]] and I went down to where the main function is, we can see this main function is probably our flag, and it uses 3 arrays, and calls 2 more functions. 
 So I are going to look at the .load and .otp function 
 Here is what those functions look like.
-![[HuntressCTF_xray_loadandotpfunctions.png]]
+![HuntressCTF_xray_loadandotpfunctions](https://github.com/user-attachments/assets/9a1b37b1-a0b3-43c1-a232-cf21b02c6aa5)
+
 
 So from here I just translated all the code that makes sense to python code, since that is what I am familiar with. 
 ```
