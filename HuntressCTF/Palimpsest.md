@@ -13,11 +13,13 @@ We have
 - System.evtx
 So something about the logs here contains the flag, I won't look at that just yet as we were also given a file named Update Service.xml
 Here is the important section of the xml file just due to the powershell command that is ran.
-![[HuntressCTF_Palimpsest_XMLFile.png]]
+![HuntressCTF_Palimpsest_XMLFile](https://github.com/user-attachments/assets/3bc69ea2-a911-4f88-8a46-7b5d415f0979)
+
 The powershell command reaches out to the web domain and views the TXT record for the [[DNS]] server. 
 Honestly, I thought this was a REALLY neat way for some Malware to run code.
 If we use [[MxToolbox]] to view the text record we can find this.
-![[HuntressCTF_Palimpsest_TXTRecord.png]]
+![HuntressCTF_Palimpsest_TXTRecord](https://github.com/user-attachments/assets/a0e59235-d341-431b-bd58-4f57f29a10f5)
+
 And the base64 in the TXT record is this
 ```
 LiggJFNIRWxsaURbMV0rJFNIRWxMaWRbMTNdKydYJykoIG5lVy1vQkpFQ1QgSW8uQ29tUHJlU3NJT04uZEVmbEFUZVN0UmVBbShbc3lTVGVtLklPLm1FTU9SWXNUUkVBTV1bc1lzdEVNLmNPbnZlUlRdOjpGUk9tQkFzRTY0c3RyaW5HKCAnWlZiTGF0eFFEUDBWTFZwbUp0d0o5MjE3bVQ1b0N5V0IwbDBJSmFWWkpKQVdzaWlCdHY5ZTZVaTY5clFMRzE5TDF1UG9TUEw1ZnYvdTd2UHg1KzNUL2NYWGoyOXBkL2I0N2Vsc2R6aS92SDI4dXk0aHBaQnZqZzlYOTk5M3U4TitmLzM2L2NYVDljME43U25sUkNIRmhRS2xPUE05eDlDbVFEWEtpOGl5M01MU1dTQlhUWHlGVkZpdFVoQ1ZOTEhHUktITVFiOHZtUzgrSkxaYnNnaGdIOC9RVEltZjJnTERLYk4yNjJ3bmk1Z042eHU1NER1TGkwSkRvY21uSkJwOG1xQ1FVb2U4U2NEWnpDYUpoRDMzaUpCY1lla2lSNjVOczViUVNHNTZTaERLUGNVSmVqV1lWTlhFQjdrVEpOZkx4Z1hCaDBValJ3M0Z2cHhENW5nVVh2RUFqSkZkbEJyQllaNFVQd2RUWEJDQ3cwR0JGWUdDQ1VlQ0tCbWtCTkFxeTVyR2xJRXJuWmpYYW51eFBFQXIwWDlHK2FFMnJWTkxva3NHL0ZxWVdkWElpZ0dIZUZFbDJ0WXBXQUc3Z3d3a1VxaHNRMHBOclVKUllSQmFaVWhBQnRiamNOaWtPT3d4aU5GV3lHdXBJdFI2STdFQ0JXRXFERGpZYklBNnFvSlRrdXp3RU1SY25pMW9NVmVNVDRKRlFaU0ZsSjZWOFpKQ21sL0xzeWgyakJyTHhVK2JrUy9MQmVVcXBHdU9ndHlVc095MUcweXdJeGxKMkxYb1M0RmRCSXdLQVpKNTFFamU4YXVHSWk0R3p4d1U4YVpJZ2lsS3FpVU1Tam1QUktDOXIrMHFvcWlaVDI1RHFXQmRKTFZubEtwenpkcVdBQXBqMC9Nb0JRME9haHNyTjFzWTdhNHNhY29GV2psQ3ErTlVsUWNWTUhNbVBUdWpORCtsTlhraWk3VU5VbHh6WXJwTHNxb3B3RWsrR2c5SzB5VjhwV1FQUmdDcG92UGFjbVNHMW1tMGxWdFlhTXQvQWFrNFBaZDVUSVl5TzJOdFBuRVh6RFlZbmNoSUxnWXJPRWdvR0NJc2IzZi9PbXRHcVdtRmM5VCtCTGVyY3dtblBDdUpxRVRGanNtdXRiRjRyTktrRVBGVEtSNFUraklxOURVWkdSSUdId3NhSUtHZWJUc2dRbytrVFpDV3lkNlg0Z3lLN21aMmNGWk1TbFFxcW1BWmJGQVZrRGViUXZMb3BSZlhUQmNGVHZPS2p1L3FRU0pmRFZpTGpCVzI5c1JDb3c5QW1NM095alpyMXNsV2ZOb0NxOEY2blljTms1OUJvVEh4Wk9BMWxXS1FKeHZGUlpzdjZTekI4a25sTkFNWlJyb0RFRDhXd1VTMlNSZWRaU1FqWmNGTUl0dTdZMCtDY2pIL0M2d0Rvd0dmN0hiYUxuZmJtcHQyMGhucE84aHpHc3ZNb1NUL2V2WU5OaUk0eGJjdVRycStkdGJZTnJJbHZOdld3UUpRdGwyNGdzNTJpazFPQTkyMlRLZkQ3NWYwaS9CREpMOURMNzdROGRYejFhZGRmRzV2ZG9jL2REZysvUGh3eVg5TmZ3RT0nICkgLFtJby5jb01QUkVzc0lvbi5DT01QcmVTU2lPTk1vREVdOjpkRWNvbXBSRVNzKXwgZm9yRWFjSC1vYkpFQ1Qge25lVy1vQkpFQ1Qgc3lzVEVtLklPLlNUUkVBTVJFYURlUiggJF8gLCBbVEV4VC5lbmNvRGlOR106OmFzQ2lpICkgfXwgZm9yZUFDSC1PQmpFQ1QgeyRfLlJFQWRUb0VuZCgpIH0gKQ==
@@ -85,7 +87,8 @@ We are searching through the Application Event logs for a Source of mslnstaller,
 Anyways, We are looking through the application logs for event IDs in the range of 40000-65000, then we Sort the entries, grab the DATA field, and write that Data to %APPDATA%\flag.mp4
 
 Well now that we know what the code does, lets go look at those Events in the Application logs.
-![[HuntressCTF_palimpsest_applicationLogs.png]]
+![HuntressCTF_palimpsest_applicationLogs](https://github.com/user-attachments/assets/31eb7607-3e0e-4078-afa7-2d15fff1ca46)
+
 Okay so, we care about the Event Data, and yes I did get distracted and read through all of the jokes that were written into the Event Data field, because they were funny, and it was super entertaining, I should compile all the jokes into a file of it's own. 
 Back on track, the HEX string is probably what the powershell script is grabbing. 
 So if this has clicked, we are basically grabbing Hex Data out of the Windows Event Logs, and compiling all of that data into 1 file called flag.mp4. 
@@ -95,7 +98,8 @@ So from this point on, we just have to figure out how to build the mp4 file with
 Props to Discord user Mishka.
 I took a very simple approach, and replaced my devices event logs with the provided ones, and then ran the obfuscated powershell. 
 This creates our flag.
-![[HuntressCTF_Palimpsest_flag.png]]
+![HuntressCTF_Palimpsest_flag](https://github.com/user-attachments/assets/b6a8eb1d-5152-4aba-a4df-872beabd7e5c)
+
 
 Thank you Huntress for a very fun month, and some great challenges throughout. I did place much better than I thought I would for this being my first CTF. This was a great final challenge.
 
