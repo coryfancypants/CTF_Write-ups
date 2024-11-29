@@ -22,7 +22,8 @@ We can look up what the preview method for is.gd, but we'll preview the web page
 Which links to this Github repository, https://github.com/user-attachments/files/17251016/powershell.zip
 So lets download that, and it isn't a zip archive, but it is just a txt. and looks to be very obfuscated
 Here's a small example of what it looks like 
-![[huntressctf_russian_Github_file.png]]
+![huntressctf_russian_Github_file](https://github.com/user-attachments/assets/fbeed805-9a0a-49ef-b402-9aa1fb643862)
+
 It's quite a large document. so let's run this, since it would normally be downloaded and ran in a malicious environment.
 which gives us this base64
 ```
@@ -49,7 +50,8 @@ i = IV = 9sXGmK4q9LdYFdOp4TSsQw==
 
 so not only is it Base64 encoded it's also AES encoded.
 We can decrypt that with CyberChef pretty easily.
-![[HuntressCTF_russianRoulette_flag_decrypt.png]]
+![HuntressCTF_russianRoulette_flag_decrypt](https://github.com/user-attachments/assets/82f718c3-559b-4483-bfda-5b10fd8084b7)
+
 And we have our flag!
 ```
  flag{4e4f266d44717ff3af8bd92d292b79ec}
