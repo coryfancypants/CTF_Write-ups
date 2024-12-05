@@ -1,5 +1,6 @@
 # CTF_Write-ups
-A location to store my thoughts and notes, and how I solved various CTF's I participate in.
+A location to store my thoughts and notes, and how I solved various CTF's I participate in. 
+I use Obsidian for my notes.
 
 Hi, I am Cory Guzman, I am interested in Cyber Security, Malware Analysis, programming, One Piece, Cats, Video Games, art, DnD.
 I started this repository to store and publicize documentation on Cyber Security related Capture The Flag Events, or VM's 
